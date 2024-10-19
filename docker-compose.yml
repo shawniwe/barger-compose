@@ -27,13 +27,13 @@ services:
     networks:
     - barger-network
   sqlserver.configurator:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql-tools:latest
     volumes:
       - ./init-scripts/init.sql:/init-scripts/init.sql
     depends_on:
       sqlserver:
         condition: service_healthy
-    command: "/opt/mssql-tools18/bin/sqlcmd -S sqlserver -l 60 -U sa -P 'Qwer123ty!#' -C -d master -i /init-scripts/init.sql"
+    command: "opt/mssql-tools/bin/sqlcmd -S sqlserver -l 60 -U sa -P 'Qwer123ty!#' -C -d master -i /init-scripts/init.sql"
     networks:
     - barger-network
 
