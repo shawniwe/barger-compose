@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  barger-data-integration:
+    container_name: barger-data-integration
+    image: shawniwe/bargerdataintegration:latest
+    depends_on:
+    - sqlserver
+    networks:
+    - barger-network
+    ports:
+    - "8000:8080"
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "Qwer123ty!#"
+      ACCEPT_EULA: "Y"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Qwer123ty!# -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+    ports:
+      - "5434:1433"
+    networks:
+    - barger-network
+  sqlserver.configurator:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    volumes:
+      - ./init-scripts/init.sql:/init-scripts/init.sql
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    command: "/opt/mssql-tools18/bin/sqlcmd -S sqlserver -l 60 -U sa -P 'Qwer123ty!#' -C -d master -i /init-scripts/init.sql"
+    networks:
+    - barger-network
+
+networks:
+  barger-network:
+    driver: bridge
