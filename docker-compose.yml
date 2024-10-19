@@ -17,7 +17,7 @@ services:
       SA_PASSWORD: "Qwer123ty!#"
       ACCEPT_EULA: "Y"
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Qwer123ty!# -C -Q 'SELECT 1' || exit 1"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Qwer123ty! -C -Q 'SELECT 1' || exit 1"]
       interval: 10s
       retries: 10
       start_period: 10s
@@ -33,7 +33,7 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
-    command: "opt/mssql-tools/bin/sqlcmd -S sqlserver -l 60 -U sa -P 'Qwer123ty!#' -C -d master -i /init-scripts/init.sql"
+    command: "opt/mssql-tools/bin/sqlcmd -S sqlserver -l 60 -U sa -P 'Qwer123ty!' -C -d master -i /init-scripts/init.sql"
     networks:
     - barger-network
 
